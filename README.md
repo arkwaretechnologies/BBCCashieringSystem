@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BBC Cashiering System
 
-## Getting Started
+Offline LAN-hosted school cashiering app built with Next.js and SQLite.
 
-First, run the development server:
+## Features
+
+- Student ledger (records, charges, payments, balances, receipts)
+- School expenses (categories, entries, monthly reports, cash flow)
+- Administration (login, admin/cashier roles, backup/restore, dashboard)
+
+## Requirements
+
+- Node.js 20+
+- Windows PC to act as the LAN server
+
+## Setup
 
 ```bash
+npm install
+npm approve-scripts better-sqlite3
+copy .env.example .env
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Default login after first run:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Username: `admin`
+- Password: `admin123`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Change the admin password after first login via Users settings.
 
-## Learn More
+## LAN Deployment
 
-To learn more about Next.js, take a look at the following resources:
+1. On the server PC, build the app:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Double-click `scripts/start-server.bat` or run:
 
-## Deploy on Vercel
+```bash
+npm run start
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. On the server PC, open `http://localhost:3000`
+4. On other cashier PCs, bookmark `http://<server-ip>:3000`
+5. Allow port **3000** through Windows Firewall on the server PC
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To find the server IP on Windows:
+
+```powershell
+ipconfig
+```
+
+Look for the IPv4 address on your LAN adapter (e.g. `192.168.1.50`).
+
+## Backup & Restore
+
+- **Backup:** Settings → Download Backup (admin only)
+- **Restore:** Upload a `.db` file and type `RESTORE` to confirm, then restart the server
+
+Database file location: `data/bbc-cashier.db`
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Development server |
+| `npm run build` | Production build |
+| `npm run start` | Production server (binds `0.0.0.0:3000`) |
+| `npm run db:generate` | Generate Drizzle migrations |
+| `npm run seed:admin` | Seed admin user and defaults |
+
+## Tech Stack
+
+- Next.js 16 App Router
+- SQLite + Drizzle ORM
+- iron-session auth
+- Tailwind CSS + shadcn-style UI
