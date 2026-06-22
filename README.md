@@ -29,6 +29,8 @@ Default login after first run:
 
 Change the admin password after first login via Users settings.
 
+**LAN client login:** If cashiers get stuck on the login page after signing in, ensure `.env` has `SESSION_SECURE=false` when using HTTP (not HTTPS). Production mode previously forced secure cookies, which browsers reject on `http://192.168.x.x:3000`.
+
 ## LAN Deployment
 
 1. On the server PC, build the app:

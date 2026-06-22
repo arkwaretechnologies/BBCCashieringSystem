@@ -42,7 +42,7 @@ export async function loginAction(formData: FormData) {
   session.isLoggedIn = true;
   await session.save();
 
-  redirect("/");
+  return { success: true };
 }
 
 export async function logoutAction() {

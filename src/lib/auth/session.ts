@@ -12,6 +12,10 @@ export const defaultSession: SessionData = {
   isLoggedIn: false,
 };
 
+// LAN deployments use HTTP (not HTTPS), so Secure cookies are rejected by browsers
+// on client PCs. Only enable when actually serving over HTTPS.
+const useSecureCookies = process.env.SESSION_SECURE === "true";
+
 export const sessionOptions: SessionOptions = {
   password:
     process.env.SESSION_SECRET ??
@@ -19,7 +23,7 @@ export const sessionOptions: SessionOptions = {
   cookieName: "bbc-cashier-session",
   cookieOptions: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: useSecureCookies,
     sameSite: "lax",
     maxAge: 60 * 60 * 12,
   },

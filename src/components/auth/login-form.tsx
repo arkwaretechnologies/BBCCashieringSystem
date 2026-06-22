@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { loginAction } from "@/lib/actions/auth";
@@ -10,22 +9,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export function LoginForm() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(formData: FormData) {
     setLoading(true);
-    try {
-      const result = await loginAction(formData);
-      if (result?.error) {
-        toast.error(result.error);
-      }
-    } catch {
-      router.push("/");
-      router.refresh();
-    } finally {
+    const result = await loginAction(formData);
+    if (result?.error) {
+      toast.error(result.error);
       setLoading(false);
+      return;
     }
+    // Full page navigation ensures the session cookie is sent on the next request
+    window.location.href = "/";
   }
 
   return (
